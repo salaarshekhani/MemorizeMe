@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcards - Account</title>
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <script>(function(){try{var t=localStorage.getItem('theme'); if(t) document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a href="index.html" class="brand">MemoriseMe</a>
+    <div class="nav-links">
+        <a href="index.html">Study</a>
+    </div>
+    <div class="nav-right">
+        <button id="theme-toggle" class="btn btn-remove" aria-label="Toggle theme">🌓</button>
+        <a id="account-link" class="btn btn-remove active" href="account.html" aria-label="Account">Login</a>
+        <div class="nav-xp-badge" id="nav-xp-badge">Level 1 • 0 XP</div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>MemoriseMe - Account</h1>
+    <p class="page-subtitle">Register a new account or log in.</p>
+
+    <div class="card">
+        <div class="card-title">Sign In</div>
+        <form id="login-form">
+            <div class="form-row">
+                <div class="field">
+                    <label for="login-username">Username</label>
+                    <input id="login-username" type="text" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="login-password">Password</label>
+                    <input id="login-password" type="password" autocomplete="off">
+                </div>
+                <div class="field" style="align-self:flex-end;">
+                    <button class="btn btn-primary" type="submit">Log In</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Register</div>
+        <form id="register-form">
+            <div class="form-row">
+                <div class="field">
+                    <label for="reg-username">Username</label>
+                    <input id="reg-username" type="text" autocomplete="off">
+                </div>
+                <div class="field">
+                    <label for="reg-password">Password</label>
+                    <input id="reg-password" type="password" autocomplete="off">
+                </div>
+                <div class="field" style="align-self:flex-end;">
+                    <button class="btn" type="submit">Register</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <div class="card">
+        <div class="card-title">Current User</div>
+        <div id="current-user">Not signed in</div>
+        <button id="logout-button" class="btn btn-remove" style="margin-top:1rem;">Log Out</button>
+    </div>
+</div>
+
+<footer>Made by <span>Salaar Adnan Shekhani</span> • MemoriseMe</footer>
+<script src="theme-toggle.js"></script>
+<script src="auth.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    async function refresh() {
+        var response = await fetch('/api/auth/current');
+        var data = await response.json();
+        document.getElementById('current-user').textContent = data.username || 'Not signed in';
+    }
+    refresh();
+
+    document.getElementById('login-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var username = document.getElementById('login-username').value.trim();
+        var password = document.getElementById('login-password').value;
+        if (!username || !password) { alert('Enter username and password'); return; }
+        var result = await window.auth.login(username, password);
+        if (!result.ok) { alert(result.msg || 'Login failed'); }
+        else { alert('Logged in'); refresh(); window.location.href = 'index.html'; }
+    });
+
+    document.getElementById('register-form').addEventListener('submit', async function (e) {
+        e.preventDefault();
+        var username = document.getElementById('reg-username').value.trim();
+        var password = document.getElementById('reg-password').value;
+        if (!username || !password) { alert('Enter username and password'); return; }
+        var result = await window.auth.register(username, password);
+        if (!result.ok) { alert(result.msg || 'Register failed'); }
+        else { alert('Registered and signed in'); refresh(); window.location.href = 'index.html'; }
+    });
+
+    document.getElementById('logout-button').addEventListener('click', function () {
+        window.auth.logout();
+        refresh();
+        alert('Logged out');
+    });
+});
+</script>
+</body>
+</html>
