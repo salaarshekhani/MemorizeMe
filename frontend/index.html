@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcards and Quiz</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="icon" type="image/png" sizes="192x192" href="favicon-192.png">
+<link rel="icon" type="image/png" sizes="512x512" href="favicon-512.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<script>(function(){try{var t=localStorage.getItem('theme'); if(t) document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+    <a class="brand" href="index.html">MemoriseMe</a>
+    <div class="nav-links">
+        <a href="#" class="nav-link active" data-view="home">Study</a>
+        <a href="#" class="nav-link" data-view="stats">Stats</a>
+        <a href="#" class="nav-link" data-view="manage">Manage Cards</a>
+        <a href="#" class="nav-link" data-view="settings">Settings</a>
+    </div>
+    <div class="nav-right">
+        <button id="theme-toggle" class="btn btn-remove" aria-label="Toggle theme">🌓</button>
+        <a id="account-link" class="btn btn-remove" href="account.html" aria-label="Account">Login</a>
+        <div class="nav-xp-badge" id="nav-xp-badge">Level 1 • 0 XP</div>
+    </div>
+</nav>
+
+<div class="container">
+
+    <div class="app-header">
+        <div>
+            <h1>Flashcards and Quiz</h1>
+            <p class="page-subtitle">Learn any subject, quiz yourself, and track your progress.</p>
+        </div>
+    </div>
+
+    <div id="alert-box" class="alert"></div>
+
+    <section id="view-home" class="view active">
+
+        <div id="mode-select">
+            <div class="card">
+                <div class="card-title">Choose a mode</div>
+                <div class="mode-grid">
+                    <button class="mode-card" data-mode="flashcards">
+                        <span class="mode-icon"><img src="images/image1.svg" alt="Flashcards" width="24" height="24"></span>
+                        <span class="mode-title">Flashcards</span>
+                        <span class="mode-sub">Flip through at your own pace</span>
+                    </button>
+                    <button class="mode-card" data-mode="quiz">
+                        <span class="mode-icon"><img src="images/image2.svg" alt="Quiz mode" width="24" height="24"></span>
+                        <span class="mode-title">Quiz Mode</span>
+                        <span class="mode-sub">Timed, type the answer</span>
+                    </button>
+                    <button class="mode-card" data-mode="practice">
+                        <span class="mode-icon"><img src="images/image3.svg" alt="Practice" width="24" height="24"></span>
+                        <span class="mode-title">Practice</span>
+                        <span class="mode-sub">Type the answer, no timer</span>
+                    </button>
+                    <button class="mode-card" data-mode="weak">
+                        <span class="mode-icon"><img src="images/image4.svg" alt="Weak cards" width="24" height="24"></span>
+                        <span class="mode-title">Weak Cards</span>
+                        <span class="mode-sub">Focus on cards you miss</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="study-area" style="display:none;">
+            <div class="stage" id="stage">
+                <div class="stage-meta">
+                    <span id="stage-counter"></span>
+                    <span id="stage-score"></span>
+                </div>
+                <div id="stage-card-text" class="stage-card-text">-</div>
+                <div id="stage-hint" class="stage-hint"></div>
+            </div>
+
+            <div id="timer-wrap" style="display:none;">
+                <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+                <div class="timer-text" id="timer-text">10s</div>
+            </div>
+
+            <div id="quiz-options" class="quiz-options" style="display:none;"></div>
+
+            <div id="flash-controls" class="stage-controls" style="display:none;">
+                <button class="btn" id="btn-prev">Previous</button>
+                <button class="btn" id="btn-flip">Flip</button>
+                <button class="btn" id="btn-next">Next</button>
+            </div>
+
+            <div class="stage-controls">
+                <button class="btn" id="btn-back-home">Back to modes</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="view-stats" class="view">
+        <div class="stat-row">
+            <div class="stat-box">
+                <div class="num" id="stat-level">1</div>
+                <div class="lbl">Level</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="stat-xp">0</div>
+                <div class="lbl">Total XP</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="stat-streak">0</div>
+                <div class="lbl">Best Streak</div>
+            </div>
+            <div class="stat-box">
+                <div class="num" id="stat-cards">0</div>
+                <div class="lbl">Total Cards</div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Card performance</div>
+            <div id="perf-list" class="stats-grid"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Recent sessions</div>
+            <div id="history-list"></div>
+        </div>
+
+        <div class="stage-controls">
+            <button class="btn" id="btn-export-results">Export results (.json)</button>
+        </div>
+    </section>
+
+    <section id="view-manage" class="view">
+        <div class="card">
+            <div class="card-title">Add a flashcard</div>
+            <div class="form-row">
+                <div class="field">
+                    <label for="new-term">Term</label>
+                    <input type="text" id="new-term" placeholder="e.g. Photosynthesis">
+                </div>
+                <div class="field">
+                    <label for="new-translation">Translation</label>
+                    <input type="text" id="new-translation" placeholder="e.g. Photosynthese">
+                </div>
+                <div class="field">
+                    <label for="new-definition">Definition</label>
+                    <input type="text" id="new-definition" placeholder="e.g. The process plants use to turn sunlight into energy">
+                </div>
+                <button class="btn btn-primary" id="btn-add-card">Add Card</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">Import or export</div>
+            <div class="form-row">
+                <div class="field">
+                    <label for="import-file">Import from JSON</label>
+                    <input type="file" id="import-file" accept="application/json">
+                </div>
+                <button class="btn" id="btn-export-cards">Export cards (.json)</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-title">All flashcards</div>
+            <div id="card-list"></div>
+        </div>
+    </section>
+
+    <section id="view-settings" class="view">
+        <div class="card">
+            <div class="card-title">Settings</div>
+            <div class="settings-grid">
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Sound effects</div>
+                        <div class="setting-desc">Play a chime for correct and incorrect answers.</div>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="setting-sound">
+                        <span class="switch-track"></span>
+                    </label>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Quiz timer speed</div>
+                        <div class="setting-desc">Seconds allowed per question in Quiz Mode.</div>
+                    </div>
+                    <div class="pill-group" id="timer-pill-group">
+                        <button class="pill-option" data-seconds="5">5s</button>
+                        <button class="pill-option" data-seconds="10">10s</button>
+                        <button class="pill-option" data-seconds="15">15s</button>
+                        <button class="pill-option" data-seconds="20">20s</button>
+                        <button class="pill-option" data-seconds="30">30s</button>
+                    </div>
+                </div>
+
+                <div class="setting-row">
+                    <div>
+                        <div class="setting-label">Theme</div>
+                        <div class="setting-desc">Light or dark appearance.</div>
+                    </div>
+                    <div class="pill-group" id="theme-pill-group">
+                        <button class="pill-option" data-theme="light">Light</button>
+                        <button class="pill-option" data-theme="dark">Dark</button>
+                    </div>
+                </div>
+
+            </div>
+            <p class="setting-desc mt-3">Settings save automatically and are stored on the server, so they will still be there next time you open this page.</p>
+        </div>
+    </section>
+
+</div>
+
+<footer>Made by <span>Salaar Adnan Shekhani</span> • MemoriseMe</footer>
+
+<div id="toast" class="toast"></div>
+
+<script src="theme-toggle.js"></script>
+<script src="auth.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
