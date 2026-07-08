@@ -1,2 +1,7 @@
+[project]
+name = "memoriseme"
+version = "1.0.0"
+requires-python = ">=3.8"
+
 [tool.vercel]
 entrypoint = "backend.app:app"
