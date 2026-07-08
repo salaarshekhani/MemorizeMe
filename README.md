@@ -13,13 +13,14 @@
 - [How It Works](#how-it-works)
 - [Running It Locally](#running-it-locally)
 - [Roadmap](#roadmap)
+- [License](#license)
 - [Contact](#contact)
 
 ## About
 
 MemoriseMe is a flashcard and quiz app for memorizing anything: vocabulary, definitions, formulas, whatever you're trying to jam into your head. Flip through cards, quiz yourself against a timer, or grind through just the ones you keep getting wrong. It tracks XP, levels, and streaks so studying feels less like a chore and more like a game you're slowly winning.
 
-Built for [Hack Club Horizons](https://horizons.hackclub.com/), a summer coding marathon for high schoolers.:D
+Built for [Hack Club Horizons](https://horizons.hackclub.com/), a summer coding marathon for high schoolers. :D
 
 ## Features
 - Flip through flashcards at your own pace
@@ -61,6 +62,10 @@ Then open `http://localhost:5000`. The database sets itself up on first run, not
 - [ ] Group flashcards into separate decks by subject
 - [ ] Charts for XP and accuracy over time
 - [ ] Spaced repetition so cards resurface right before you'd forget them
+
+## License
+ 
+This project is licensed under the GNU Affero General Public License v3.0 (AGPL-3.0). See [LICENSE](LICENSE) for the full text.
 
 ## Contact
 
