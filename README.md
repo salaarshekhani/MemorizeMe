@@ -8,7 +8,6 @@
 
 ## Table of Contents
 - [About](#about)
-- [Screenshots](#screenshots)
 - [Features](#features)
 - [Tech Stack](#tech-stack)
 - [How It Works](#how-it-works)
